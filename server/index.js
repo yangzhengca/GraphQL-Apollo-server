@@ -1,56 +1,26 @@
-const { ApolloServer, gql } = require("apollo-server");
+const { ApolloServer } = require("apollo-server");
+const { mainCards, animals, categories } =require('./db')
+const typeDefs = require('./schema.js')
+const Query = require('./resolvers/Query')
+const Animal = require('./resolvers/Animal');
+const Category = require("./resolvers/Category");
+const Mutation = require("./resolvers/Mutation");
 
-const typeDefs = gql`
-  type Book {
-    title: String
-    author: String
-  }
 
-  type MainCard {
-    title: String
-    image: String
-  }
-
-  type Query {
-    books: [Book]
-    mainCards: [MainCard]
-  }
-`;
-
-const books = [
-  {
-    title: "The Awakening",
-    author: "Kate Chopin",
+const server = new ApolloServer({
+  typeDefs, 
+  resolvers:{
+    Query,
+    Animal,
+    Category,
+    Mutation
   },
-  {
-    title: "City of Glass",
-    author: "Paul Auster",
-  },
-];
-
-const mainCards = [
-    {
-      title: "Recently Viewed",
-      image: "lion",
-    },
-    {
-      title: 'Looking for a Gift?',
-      image: 'penguin',
-    },
-    {
-      title: 'Best Behaved',
-      image: 'cat',
-    },
-];
-
-const resolvers = {
-  Query: {
-    books: () => books,
-    mainCards: () => mainCards
-  },
-};
-
-const server = new ApolloServer({ typeDefs, resolvers });
+  context:{
+    mainCards,
+    animals,
+    categories
+  }
+});
 
 server.listen().then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`);

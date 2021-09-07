@@ -2,6 +2,8 @@ import React from 'react'
 import Card from '../Card/Card'
 import {Container} from "react-bootstrap"
 
+
+
 function CardDisplay({animals}) {
 
     return (
